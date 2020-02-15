@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
-from core.views import PostView
+from core.views import PostView, PostCreateView, PostListView
 #from core.views import TestView
 #from core.views import test_view
 
@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    # path('', TestView.as_view(), name='test'),
     path('', PostView.as_view(), name='test'),
+    path('create/', PostCreateView.as_view(), name='create'),
+    path('list-create/', PostListView.as_view(), name='list-create'),
     path('api/token/', obtain_auth_token, name='obtain-token'),
     #path('frontend/', test_view, name='test')
 ]

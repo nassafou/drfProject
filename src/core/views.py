@@ -12,6 +12,27 @@ from rest_framework import generics
 from .serializers import PostSerializer
 from .models import Post
 
+
+class TestView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        
+           #'name': 'john',
+            #'age': 23
+        qs = Post.objects.all()
+        post = qs.first()
+        #serializer = PostSerializer(qs, many=True)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+     
+    def post(self, request, *args, **kwargs):
+       serializer = PostSerializer(data=request.data)
+       if serializer.is_valid():
+             serializer.save()
+             return Response(serializer.data)
+       return Response(serializer.errors)
+
+
 class PostView(
                mixins.ListModelMixin,
                mixins.CreateModelMixin,
@@ -29,6 +50,23 @@ class PostView(
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+    
+class PostCreateView(
+                     mixins.ListModelMixin,
+                     generics.CreateAPIView):
+    
+      serializer_class = PostSerializer
+      queryset = Post.objects.all()
+      
+      def get(self, request, *args, **kwargs):
+       return self.list(request, *args, **kwargs)
+      
+class PostListView(
+                     mixins.ListModelMixin,
+                     generics.CreateAPIView):
+    
+      serializer_class = PostSerializer
+      queryset = Post.objects.all()
     
  # class TestView(APIView):
  #    permission_classes = (IsAuthenticated,)
